@@ -22,20 +22,26 @@ public class InvoiceWebhookRoute extends RouteBuilder {
 
         // Define the REST configuration for the Camel Rest DSL
         restConfiguration()
-            .component("undertow")
-            .host("0.0.0.0") 
+            .component("servlet")
             .port("8080")
             .bindingMode(RestBindingMode.auto);
 
         // Define the REST endpoint
-        rest("/webhook")
+        rest("/invoice")
             .get("/{invoice_id}")   // Define a GET request with invoice_id as parameter
             .to("direct:processInvoice");
+
+                    // Define a REST endpoint to expose metrics
+        rest("/metrics")
+        .get()  // Define a GET request for metrics
+        .to("micrometer:metrics");
+
 
         // Mock DB fetch function to get invoice items
         from("direct:processInvoice")
             .process(exchange -> {
                 String invoiceId = exchange.getIn().getHeader("invoice_id", String.class);
+                System.out.println("Invoice id = " + invoiceId);
 
                 if (invoiceId == null || invoiceId.isEmpty()) {
                     exchange.getIn().setBody("Missing or invalid invoice_id parameter");
@@ -47,18 +53,31 @@ public class InvoiceWebhookRoute extends RouteBuilder {
                 List<Map<String, Object>> invoiceItems = mockInvoiceItems(invoiceId);
                 exchange.getIn().setBody(invoiceItems);
             })
-            .split(body())           // Split the list of invoice items
-                .process(exchange -> {
-                    Map<String, Object> invoiceItem = exchange.getIn().getBody(Map.class);
-                    // Mock fetching individual invoice item details
-                    Map<String, Object> itemDetails = mockInvoiceItemDetails((String) invoiceItem.get("item_id"));
-                    exchange.getIn().setBody(itemDetails);
-                })
+            .split(body())
+                .to("seda:processItem")
             .end()
             .aggregate(constant(true), new ArrayListAggregationStrategy())  // Aggregate the results
                 .completionSize(exchangeProperty(Exchange.SPLIT_SIZE))      // Complete when all splits are processed
-            .marshal().json(JsonLibrary.Jackson)                           // Convert the final result to JSON
+            .marshal().json(JsonLibrary.Jackson)
+            .log("Received message: ${body}") // Log the message body
             .setHeader(Exchange.CONTENT_TYPE, constant("application/json")); // Set the response as JSON
+
+        // Process individual invoice items using Seda
+        from("seda:processItem?concurrentConsumers=5")
+            .to("micrometer:counter:invoices.processed?tags=type=item") // Increment counter for processed invoice items
+            .process(exchange -> {
+                long startTime = System.nanoTime(); // Start timing
+
+                Map<String, Object> invoiceItem = exchange.getIn().getBody(Map.class);
+                // Mock fetching individual invoice item details
+                Map<String, Object> itemDetails = mockInvoiceItemDetails((String) invoiceItem.get("item_id"));
+                exchange.getIn().setBody(itemDetails);
+                System.out.println(itemDetails);
+
+                long duration = System.nanoTime() - startTime; // Calculate duration
+                exchange.getContext().createProducerTemplate()
+                        .sendBody("micrometer:timer:invoices.processing.time?tags=type=item", duration); // Record processing time
+            });
     }
 
     // Mocked method to simulate fetching invoice items from DB

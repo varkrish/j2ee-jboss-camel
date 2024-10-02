@@ -54,11 +54,21 @@ This application is designed for deployment on **JBoss EAP 7.x** and above.
 3. Verify the deployment:
    Open the JBoss management console or check logs to confirm the successful deployment.
 
+4. Access HTTP Endpoint:
+
+   ```bash 
+   curl http://127.0.0.1:8080/cameljobs-web-1.0-SNAPSHOT/rest/invoice/12 
+
+   [{"item_id":"item1","invoice_id":"12"},{"item_id":"item2","invoice_id":"12"},{"item_id":"item3","invoice_id":"12"}]%
+   ```
+
 ## Configuration
 - **Spring Configuration**: The Spring context is initialized via `applicationContext.xml` located in the `WEB-INF` directory of the web module.
 - **Camel Routes**: Three routes are configured:
   - Twos route defined in XML demonstrating CBR and a simple timer based route
   - One route defined in Java DSL that processes files
+  - One Route defined in Java DSL to expose HTTP endpoint demonstrating SEDA + micrometer
+
 
 ## License
 This project is licensed under the MIT License.

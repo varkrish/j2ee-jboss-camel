@@ -3,4 +3,17 @@
        xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
                            http://xmlns.jcp.org/xml/ns/javaee/beans_1_1.xsd"
        bean-discovery-mode="all">
+
+           <bean id="camelServlet" class="org.apache.camel.component.servlet.CamelHttpTransportServlet"/>
+
+    <bean id="servletRegistrationBean" class="org.springframework.boot.web.servlet.ServletRegistrationBean">
+        <constructor-arg ref="camelServlet"/>
+        <constructor-arg>
+            <list>
+                <value>/camel/*</value>
+            </list>
+        </constructor-arg>
+        <property name="name" value="CamelServlethh"/>
+    </bean>
+
 </beans>

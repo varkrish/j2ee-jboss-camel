@@ -11,6 +11,7 @@
 
   <properties>
 		<camel.version>3.20.1</camel.version>
+        <micrometer.version>1.10.5</micrometer.version>
 		<version.jboss.eap>7.4.16.GA</version.jboss.eap>
 		    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -113,10 +114,23 @@
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-management</artifactId>
     </dependency>
+        <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-rest</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-spring</artifactId>
-    </dependency>
+    </dependency>    
+<dependency>
+    <groupId>io.micrometer</groupId>
+    <artifactId>micrometer-core</artifactId>
+    <version>${micrometer.version}</version>
+</dependency>
+        <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-micrometer</artifactId>
+    </dependency>    
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-cdi</artifactId>

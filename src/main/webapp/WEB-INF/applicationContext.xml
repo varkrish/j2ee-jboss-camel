@@ -13,6 +13,9 @@
            <!--
         Simple camel route which send every one minute a message on the console.
     -->
+
+      <bean id="metricsMessageHistoryFactory" class="org.apache.camel.component.micrometer.messagehistory.MicrometerMessageHistoryFactory"/>
+      
     <camelContext xmlns="http://camel.apache.org/schema/spring">
     
     	   <propertyPlaceholder id="properties" location="application.properties"/>
