@@ -1,0 +1,8 @@
+<routes xmlns="http://camel.apache.org/schema/spring">
+    <!-- Route to pick up files from an SFTP server -->
+    <route id="sftpFileProcessingRoute">
+        <from uri="sftp://{{sftp.host}}:{{sftp.port}}/{{sftp.directory}}?username={{sftp.username}}&amp;password={{sftp.password}}&amp;delete=true"/>
+        <log message="Processing SFTP file: ${file:name}"/>
+        <to uri="file:{{file.output.dir}}?fileName=${file:name}.done"/>
+    </route>
+</routes>
