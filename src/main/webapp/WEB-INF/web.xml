@@ -5,6 +5,23 @@
             http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1">
 
+   <listener>
+      <listener-class>org.jboss.weld.environment.servlet.Listener</listener-class>
+   </listener>
+
+   <!-- Camel Servlet -->
+   <servlet>
+      <servlet-name>CamelServlet</servlet-name>
+      <servlet-class>org.apache.camel.component.servlet.CamelHttpTransportServlet</servlet-class>
+      <load-on-startup>1</load-on-startup>
+   </servlet>
+
+   <!-- Camel Servlet Mapping -->
+   <servlet-mapping>
+      <servlet-name>CamelServlet</servlet-name>
+      <url-pattern>/rest/*</url-pattern>
+   </servlet-mapping>
+   
     <!-- Spring ContextLoaderListener to start up the application context -->
     <context-param>
         <param-name>contextConfigLocation</param-name>

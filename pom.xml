@@ -78,6 +78,27 @@
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-core</artifactId>
     </dependency>
+            <!-- Hawtio WAR -->
+<!-- https://mvnrepository.com/artifact/io.hawt/hawtio-war -->
+<!-- https://mvnrepository.com/artifact/io.hawt/hawtio-war -->
+<!-- https://mvnrepository.com/artifact/io.hawt/hawtio-war -->
+
+
+  <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>2.15.0</version> <!-- Replace with the latest version if needed -->
+  </dependency>
+<dependency>
+    <groupId>org.apache.camel</groupId>
+    <artifactId>camel-jackson</artifactId>
+    <version>${camel.version}</version>
+</dependency>
+<dependency>
+    <groupId>org.apache.camel</groupId>
+    <artifactId>camel-undertow</artifactId>
+    <version>${camel.version}</version>
+</dependency>
 
     <!-- Camel File component for file polling -->
     <dependency>
@@ -87,6 +108,10 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-stream</artifactId>
+    </dependency>
+        <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-management</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>

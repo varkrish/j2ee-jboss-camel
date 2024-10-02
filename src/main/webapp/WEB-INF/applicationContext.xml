@@ -10,10 +10,7 @@
        http://www.springframework.org/schema/context/spring-context.xsd
        http://camel.apache.org/schema/spring 
        http://camel.apache.org/schema/spring/camel-spring.xsd">
-       
-     <context:component-scan base-package="com.redhat.cameljobs.routes"/>
-	<bean id="routeBuilder" class="com.redhat.cameljobs.routes.FileProcessingRoute" />
-    <!--
+           <!--
         Simple camel route which send every one minute a message on the console.
     -->
     <camelContext xmlns="http://camel.apache.org/schema/spring">
